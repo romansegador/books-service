@@ -1,0 +1,6 @@
+server:
+  port: 32500
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
