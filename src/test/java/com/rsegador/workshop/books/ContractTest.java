@@ -54,6 +54,12 @@ public class ContractTest {
                 .thenReturn(ImmutableList.of(book));
     }
 
+    @State("no books available for an author")
+    public void noBooksAvailableForAuthor() {
+        when(bookService.getBooks(any(), any()))
+                .thenReturn(ImmutableList.of());
+    }
+
     @State("books available for an author")
     public void booksAvailableForAuthor() {
         when(bookService.getBooks(any(), any()))

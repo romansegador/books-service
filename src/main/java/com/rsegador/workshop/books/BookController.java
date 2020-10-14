@@ -2,12 +2,12 @@ package com.rsegador.workshop.books;
 
 import com.rsegador.workshop.books.dto.Book;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RestController
 @AllArgsConstructor
@@ -16,6 +16,9 @@ public class BookController {
 
     BookService bookService;
 
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public static class ResourceNotFoundException extends RuntimeException {}
+
     @GetMapping("/api/books")
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
@@ -23,6 +26,11 @@ public class BookController {
 
     @GetMapping("/api/books/byauthor")
     public List<Book> getBooks(@RequestParam String firstName, @RequestParam String lastName) {
-        return bookService.getBooks(firstName, lastName);
+        List<Book> books = bookService.getBooks(firstName, lastName);
+        if (isEmpty(books)) {
+            throw new ResourceNotFoundException();
+        } else {
+            return books;
+        }
     }
 }
