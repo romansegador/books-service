@@ -87,30 +87,30 @@
 						<pact.verifier.publishResults>false</pact.verifier.publishResults>
 						<pact.provider.version>${project.version}</pact.provider.version>
 						<pact.provider.tag>build</pact.provider.tag>
-						<pactbroker.consumerversionselectors.tags>build,Test,Prod</pactbroker.consumerversionselectors.tags>
+						<pactbroker.consumerversionselectors.tags>build,Test,Prod,Build,Testing,Production</pactbroker.consumerversionselectors.tags>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.4.13</version>
-				<executions>
-					<execution>
-						<id>default</id>
-						<goals>
-							<goal>build</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<repository>rsegador/${project.artifactId}</repository>
-					<tag>latest</tag>
-					<buildArgs>
-						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
-				</configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>com.spotify</groupId>-->
+<!--				<artifactId>dockerfile-maven-plugin</artifactId>-->
+<!--				<version>1.4.13</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>default</id>-->
+<!--						<goals>-->
+<!--							<goal>build</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<repository>rsegador/${project.artifactId}</repository>-->
+<!--					<tag>latest</tag>-->
+<!--					<buildArgs>-->
+<!--						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>-->
+<!--					</buildArgs>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
