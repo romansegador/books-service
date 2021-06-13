@@ -1,0 +1,56 @@
+name: manual-deployments
+on: [workflow_dispatch]
+jobs:
+  deployToTest:
+    environment: Testing
+    runs-on: ubuntu-latest
+    name: Deploy to Test
+    steps:
+      - name: Can be deployed?
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker can-i-deploy \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --to "Testing"
+      - name: Deploy
+        run: echo 'Deploying to Production'
+      - name: Set Tag
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker create-version-tag \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --tag "Testing"
+
+  deployToProd:
+    environment: Production
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+    steps:
+      - name: Can be deployed?
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker can-i-deploy \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --to "Production"
+      - name: set Tag
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker create-version-tag \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --tag "Production"

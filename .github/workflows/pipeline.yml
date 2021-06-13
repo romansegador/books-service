@@ -1,0 +1,76 @@
+name: pipeline
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots verify -Dpact.verifier.publishResults=true -Dpact.provider.version=${GITHUB_SHA} -Dpactbroker.host=${{ secrets.PACT_HOST }} -Dpactbroker.protocol="https" -Dpactbroker.port="" -Dpactbroker.auth.token=${{ secrets.PACT_TOKEN }}
+
+  deployToTest:
+    environment: Testing
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy to Test
+    steps:
+      - name: Can be deployed?
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker can-i-deploy \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --to "Testing"
+      - name: Deploy
+        run: echo 'Deploying to Production'
+      - name: Set Tag
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker create-version-tag \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --tag "Testing"
+
+  deployToProd:
+    environment: Production
+    needs: deployToTest
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+    steps:
+      - name: Can be deployed?
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker can-i-deploy \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --to "Production"
+      - name: set Tag
+        run: |
+          docker run --rm \
+           -e PACT_BROKER_BASE_URL=https://${{ secrets.PACT_HOST }} \
+           -e PACT_BROKER_TOKEN=${{ secrets.PACT_TOKEN }} \
+          pactfoundation/pact-cli:latest \
+          broker create-version-tag \
+          --pacticipant "books-service" \
+          --version ${GITHUB_SHA} \
+          --tag "Production"
