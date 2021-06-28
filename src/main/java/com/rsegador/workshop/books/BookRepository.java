@@ -42,7 +42,7 @@ public class BookRepository {
                 .lastName("Clokie").build();
 
         Book agileTesting = Book.builder()
-                .newTitle("Agile Testing: A Practical Guide for Testers and Agile Teams")
+                .title("Agile Testing: A Practical Guide for Testers and Agile Teams")
                 .authors(ImmutableList.of(lisa, janet))
                 .ISBN10("9780321534460")
                 .ISBN13("978-0321534460")
@@ -53,7 +53,7 @@ public class BookRepository {
                 .build();
 
         Book moreAgileTesting = Book.builder()
-                .newTitle("More Agile Testing: Learning Journeys for the Whole Team")
+                .title("More Agile Testing: Learning Journeys for the Whole Team")
                 .authors(ImmutableList.of(janet, lisa))
                 .ISBN10("0321967054")
                 .ISBN13("978-0321967053")
@@ -64,7 +64,7 @@ public class BookRepository {
                 .build();
 
         Book exploreIt = Book.builder()
-                .newTitle("Explore It!: Reduce Risk and Increase Confidence with Exploratory Testing")
+                .title("Explore It!: Reduce Risk and Increase Confidence with Exploratory Testing")
                 .authors(ImmutableList.of(elisabeth))
                 .ISBN10("1937785025")
                 .ISBN13("978-1937785024")
@@ -75,7 +75,7 @@ public class BookRepository {
                 .build();
 
         Book tdd = Book.builder()
-                .newTitle("Diseño Ágil con TDD")
+                .title("Diseño Ágil con TDD")
                 .authors(ImmutableList.of(carlos))
                 .publisher("Leanpub")
                 .language("Spanish")
@@ -84,7 +84,7 @@ public class BookRepository {
                 .build();
 
         Book devOps = Book.builder()
-                .newTitle("A Practical Guide to Testing in DevOps")
+                .title("A Practical Guide to Testing in DevOps")
                 .authors(ImmutableList.of(katrina))
                 .publisher("Leanpub")
                 .language("English")

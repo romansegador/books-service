@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class Book {
 
-    String newTitle;
+    String title;
     List<Author> authors;
     String ISBN10;
     String ISBN13;
