@@ -73,7 +73,7 @@ public class ContractTest {
     interface TestData {
         Author author = Author.builder().firstName("FName").lastName("LName").build();
         Book book = Book.builder()
-                .title("the title of the book")
+                .newTitle("the title of the book")
                 .authors(ImmutableList.of(author))
                 .ISBN10("5550000000000")
                 .ISBN13("555-00000000000")
